@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <title>To do app</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar fixed-top">
+            <h1>To do app</h1>
+            <button id="sidebarToggle">☰</button>
+
+            <search class="nav-search">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                </svg>
+                <input id="search" placeholder="Search tasks" type="text" class="form-control">
+                <button type="submit" class="button btn-success">Search</button>
+            </search>
+
+            <div class="theme-menu">
+                <button id="theme" type="button">Themes</button>
+                <ul id="themeDropdown" style="display: none;">
+                    <li id="dark"><i class="fa-solid fa-moon"></i>Dark</li>
+                    <li id="light"><i class="fa-regular fa-sun"></i>Light</li>
+                    <li id="pink">Pink</li>
+                    <li id="system"><i class="fa-solid fa-laptop"></i>System default</li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div id="appCard">
+        <aside class="sidebar sidebar-hidden" id="sidebar">
+            <h2>Menu</h2>
+            <ul style="list-style-type: none; padding: 0;">
+                <li><a href="#" id="taskToggle" style="font-size: 20px;">Tasks</a>
+                    <ul id="taskDropdown" style="list-style-type: none; padding: 0; display: none; font-size: medium;">
+                        <li><a href="#" id="priorityTasks">Priority Tasks</a></li>
+                        <li><a href="#" id="completedTasks">Completed</a></li>
+                        <li><a href="#" id="pendingTasks">Pending</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" id="settingsToggle" style="font-size: 20px;"> ⚙️ Settings</a></li>
+                <ul id="settingDropdown" style="list-style-type: none; padding: 0; display: none; font-size: medium;">
+                    <li><a href="#" id="clearAllTasks">Clear All Tasks</a></li>
+
+                    <li>
+                        <label for="defaultPriority">Default Priority</label>
+                        <select id="defaultPriority">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </li>
+
+                    <li><a href="#" id="support">Support</a></li>
+
+        <!-- FAQ block moved outside the sidebar/list entirely -->
+        <div id="faqBlock">
+    <div class="faq-content">
+        <h3>Help / FAQ</h3>
+
+        <p><strong>How do I add a task?</strong><br>
+        Type into the input box and click "Add" or press Enter.</p>
+
+        <p><strong>How do I mark a task as complete?</strong><br>
+        Click the checkbox next to the task — it'll show a strikethrough.</p>
+
+        <p><strong>How does priority work?</strong><br>
+        Each task has a priority (Low/Medium/High) you can change from its dropdown. Use "Priority Tasks" in the sidebar to sort by priority.</p>
+
+        <p><strong>How do I filter tasks?</strong><br>
+        Use "Completed" or "Pending" under Tasks in the sidebar to filter your view.</p>
+
+        <p><strong>Can I change the default priority for new tasks?</strong><br>
+        Yes — set it under Settings → Default Priority.</p>
+
+        <p><strong>How do I clear everything?</strong><br>
+        Settings → Clear All Tasks. This can't be undone, so you'll be asked to confirm.</p>
+
+        <p><strong>Can I change the look of the app?</strong><br>
+        Yes — use the Themes menu in the top-right to switch between Dark, Light, Pink, or System default.</p>
+
+        <button id="closeFaq">Close</button>
+    </div>
+</div>
+        </aside>
+        <div class="add-task-section">
+            <h1>Create your day list ></h1>
+            <Form>
+                <div style="display: flex; align-items: center; gap: 10px; justify-content: center;">
+                    <input type="text" placeholder="Add a new task" id="input" class="form-control"
+                        style="width: 250px;" />
+                    <button type="submit" onclick="addEventListener" id="Addtask" class="button btn-success">Add</button>
+                </div>
+            </Form>
+            <h3 style="text-align: left; margin-left: 20px;">My Tasks</h3>
+            <ul style="text-align: left; margin-left: 20px;" id="taskList">
+            </ul>
+        </div>
+    </div>
+   <footer id="footer">Made by Anuja <span class="heart">&hearts;</span></footer>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
