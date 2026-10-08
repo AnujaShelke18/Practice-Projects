@@ -1,21 +1,21 @@
 export function createTaskElement(task) {
     const li = document.createElement("li");
-    li.dataset.id = task.id;
+    li.dataset.id = task._id;
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.dataset.id = task.id;
-    checkbox.checked = task.status;
+    checkbox.dataset.id = task._id;
+    checkbox.checked = task.completed;
     li.appendChild(checkbox);
 
     const span = document.createElement("span");
-    span.innerHTML = task.task;
-    if (task.status) span.classList.add("completed");
+    span.textContent = task.text;
+    if (task.completed) span.classList.add("completed");
     li.appendChild(span);
 
     const deleteButton = document.createElement("button");
     deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
-    deleteButton.dataset.id = task.id;
+    deleteButton.dataset.id = task._id;
     li.appendChild(deleteButton);
 
     const prioritySelect = document.createElement("select");
@@ -26,7 +26,7 @@ export function createTaskElement(task) {
         prioritySelect.appendChild(option);
     });
     prioritySelect.value = task.priority;
-    prioritySelect.dataset.id = task.id;
+    prioritySelect.dataset.id = task._id;
     li.appendChild(prioritySelect);
 
     return { li, checkbox, span, deleteButton, prioritySelect };
@@ -41,7 +41,7 @@ export function filterTasksByStatus(statusToShow) {
 
 export function filterTasksBySearch(searchValue) {
     document.querySelectorAll("#taskList li").forEach(li => {
-        const text = li.querySelector("span").innerHTML;
+        const text = li.querySelector("span").textContent;
         li.style.display = text.toUpperCase().includes(searchValue.toUpperCase()) ? "list-item" : "none";
     });
 }
@@ -49,11 +49,11 @@ export function filterTasksBySearch(searchValue) {
 export function reorderTaskElements(sortedTasks) {
     const taskList = document.getElementById("taskList");
     sortedTasks.forEach(task => {
-        const li = document.querySelector(`#taskList li[data-id="${task.id}"]`);
+        const li = document.querySelector(`#taskList li[data-id="${task._id}"]`);
         if (li) taskList.appendChild(li);
     });
 }
 
 export function clearTaskListDOM() {
-    document.getElementById("taskList").innerHTML = "";
+    document.getElementById("taskList").textContent = "";
 }

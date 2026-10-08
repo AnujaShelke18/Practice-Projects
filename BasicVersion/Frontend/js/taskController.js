@@ -8,38 +8,57 @@ function getDefaultPriority() {
 function addTaskToDOM(task) {
     const { li, checkbox, deleteButton, prioritySelect } = taskView.createTaskElement(task);
 
-    checkbox.addEventListener("change", function () {
-        taskModel.toggleTaskStatus(parseInt(this.dataset.id), this.checked);
+    checkbox.addEventListener("change", async function () {
+    try {
+        await taskModel.toggleTaskStatus(this.dataset.id, this.checked);
         this.nextElementSibling.classList.toggle("completed");
+    } catch (err) {
+        this.checked = !this.checked;
+        alert("Could not update the task.");
+    }
+});
+
+    deleteButton.addEventListener("click", async function () {
+        try{
+            await taskModel.deleteTask(this.dataset.id);
+            li.remove();
+        }catch (err){
+            alert("Could not delete the task.");
+        }
     });
 
-    deleteButton.addEventListener("click", function () {
-        taskModel.deleteTask(parseInt(this.dataset.id));
-        li.remove();
-    });
-
-    prioritySelect.addEventListener("change", function () {
-        taskModel.updateTaskPriority(parseInt(this.dataset.id), this.value);
+    prioritySelect.addEventListener("change", async function () {
+        try {
+        await taskModel.updateTaskPriority((this.dataset.id), this.value);
+        } catch (err){
+           console.log(err);
+           alert("Could not update the priority.");
+        }    
     });
 
     document.getElementById("taskList").appendChild(li);
 }
 
-export function initTaskController() {
-    document.getElementById("Addtask").addEventListener("click", function (e) {
-        e.preventDefault();
+export async function initTaskController() {
+    document.getElementById("Addtask").addEventListener("click", async function (e) {
+    e.preventDefault();
+    try {
         const taskInput = document.getElementById("input");
         const taskValue = taskInput.value.trim();
         if (taskValue === "") {
             alert("Please enter a task.");
             return;
         }
+        const newTask = await taskModel.createTask(taskValue, getDefaultPriority());
+        addTaskToDOM(newTask);
         taskInput.value = "";
-        addTaskToDOM(taskModel.createTask(taskValue, getDefaultPriority()));
-    });
+    } catch (err) {
+        alert("Couldn't add the new task.");
+    }
+});
 
     document.getElementById("search").addEventListener("input", function () {
-        taskView.filterTasksBySearch(this.value.trim());
+         taskView.filterTasksBySearch(this.value.trim());
     });
 
     document.getElementById("taskToggle").addEventListener("click", function (e) {
@@ -58,9 +77,18 @@ export function initTaskController() {
         taskView.filterTasksByStatus(false);
     });
 
-    document.getElementById("priorityTasks").addEventListener("click", function (e) {
+        document.getElementById("priorityTasks").addEventListener("click", function (e) {
         e.preventDefault();
         taskModel.sortByPriority();
         taskView.reorderTaskElements(taskModel.taskArray);
     });
+
+    try {
+        const tasks = await taskModel.loadTasks();
+        tasks.forEach(addTaskToDOM);
+    } catch (err) {
+        alert("Could not load tasks. Is the server running?");
+    }
 }
+
+    

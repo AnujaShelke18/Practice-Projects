@@ -13,12 +13,16 @@ export function initSettingsController() {
     });
     document.getElementById("defaultPriority").value = localStorage.getItem("defaultPriority") || "High";
 
-    document.getElementById("clearAllTasks").addEventListener("click", function (e) {
+    document.getElementById("clearAllTasks").addEventListener("click", async function (e) {
         e.preventDefault();
         if (!confirm("Are you sure you want to clear all tasks?")) return;
-        taskModel.clearAllTasks();
+        try{
+        await taskModel.clearAllTasks();
         taskView.clearTaskListDOM();
         document.getElementById("settingDropdown").style.display = "none";
+        }catch(err){
+            alert("Could not clear the tasks.");
+        }
     });
 
     document.getElementById("support").addEventListener("click", function (e) {
