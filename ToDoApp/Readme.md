@@ -2,7 +2,7 @@
 
 A full-stack to-do list app. The frontend is built from scratch with vanilla JavaScript, HTML and CSS — no frameworks — and talks to a Node.js / Express REST API that stores tasks in MongoDB Atlas. Built as a hands-on learning project to practice DOM manipulation, state management, an MVC-style code structure, `fetch` with `async` / `await`, and REST API design.
 
-<!-- Live demo: add the link here after deploying -->
+Live Link - (https://toodoapp-1hmi.onrender.com/)
 
 ## Screenshot
 
@@ -156,10 +156,6 @@ npx serve
 Then open the printed `http://localhost:...` URL in your browser.
 
 The frontend calls the API at `http://localhost:5000/api/tasks`. If your backend runs somewhere else, change `API_URL` near the top of `js/taskModel.js`.
-
-## Roadmap
-
-- Deploy the app online (MongoDB Atlas, a hosted backend and a static frontend host)
 
 ## Author
 
