@@ -35,14 +35,14 @@ export function createTaskElement(task) {
 export function filterTasksByStatus(statusToShow) {
     document.querySelectorAll("#taskList li").forEach(li => {
         const checkbox = li.querySelector('input[type="checkbox"]');
-        li.style.display = checkbox.checked === statusToShow ? "list-item" : "none";
+       li.style.display = checkbox.checked === statusToShow ? "" : "none";
     });
 }
 
 export function filterTasksBySearch(searchValue) {
     document.querySelectorAll("#taskList li").forEach(li => {
         const text = li.querySelector("span").textContent;
-        li.style.display = text.toUpperCase().includes(searchValue.toUpperCase()) ? "list-item" : "none";
+       li.style.display = text.toUpperCase().includes(searchValue.toUpperCase()) ? "" : "none";
     });
 }
 

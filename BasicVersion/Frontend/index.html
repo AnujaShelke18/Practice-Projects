@@ -39,6 +39,7 @@
             </div>
         </nav>
     </header>
+
     <div id="appCard">
         <aside class="sidebar sidebar-hidden" id="sidebar">
             <h2>Menu</h2>
@@ -64,37 +65,10 @@
                     </li>
 
                     <li><a href="#" id="support">Support</a></li>
-
-        <!-- FAQ block moved outside the sidebar/list entirely -->
-        <div id="faqBlock">
-    <div class="faq-content">
-        <h3>Help / FAQ</h3>
-
-        <p><strong>How do I add a task?</strong><br>
-        Type into the input box and click "Add" or press Enter.</p>
-
-        <p><strong>How do I mark a task as complete?</strong><br>
-        Click the checkbox next to the task — it'll show a strikethrough.</p>
-
-        <p><strong>How does priority work?</strong><br>
-        Each task has a priority (Low/Medium/High) you can change from its dropdown. Use "Priority Tasks" in the sidebar to sort by priority.</p>
-
-        <p><strong>How do I filter tasks?</strong><br>
-        Use "Completed" or "Pending" under Tasks in the sidebar to filter your view.</p>
-
-        <p><strong>Can I change the default priority for new tasks?</strong><br>
-        Yes — set it under Settings → Default Priority.</p>
-
-        <p><strong>How do I clear everything?</strong><br>
-        Settings → Clear All Tasks. This can't be undone, so you'll be asked to confirm.</p>
-
-        <p><strong>Can I change the look of the app?</strong><br>
-        Yes — use the Themes menu in the top-right to switch between Dark, Light, Pink, or System default.</p>
-
-        <button id="closeFaq">Close</button>
-    </div>
-</div>
+                </ul>
+            </ul>
         </aside>
+
         <div class="add-task-section">
             <h1>Create your day list ></h1>
             <Form>
@@ -109,7 +83,39 @@
             </ul>
         </div>
     </div>
-   <footer id="footer">Made by Anuja <span class="heart">&hearts;</span></footer>
+
+    <!-- FAQ popup: kept outside the sidebar so it can be centered on the screen -->
+    <div id="faqBlock">
+        <div class="faq-content">
+            <h3>Help / FAQ</h3>
+
+            <p><strong>How do I add a task?</strong><br>
+                Type into the input box and click "Add" or press Enter.</p>
+
+            <p><strong>How do I mark a task as complete?</strong><br>
+                Click the checkbox next to the task — it'll show a strikethrough.</p>
+
+            <p><strong>How does priority work?</strong><br>
+                Each task has a priority (Low/Medium/High) you can change from its dropdown. Use "Priority Tasks" in the
+                sidebar to sort by priority.</p>
+
+            <p><strong>How do I filter tasks?</strong><br>
+                Use "Completed" or "Pending" under Tasks in the sidebar to filter your view.</p>
+
+            <p><strong>Can I change the default priority for new tasks?</strong><br>
+                Yes — set it under Settings → Default Priority.</p>
+
+            <p><strong>How do I clear everything?</strong><br>
+                Settings → Clear All Tasks. This can't be undone, so you'll be asked to confirm.</p>
+
+            <p><strong>Can I change the look of the app?</strong><br>
+                Yes — use the Themes menu in the top-right to switch between Dark, Light, Pink, or System default.</p>
+
+            <button id="closeFaq">Close</button>
+        </div>
+    </div>
+
+    <footer id="footer">Made by Anuja <span class="heart">&hearts;</span></footer>
     <script type="module" src="js/main.js"></script>
 </body>
 
