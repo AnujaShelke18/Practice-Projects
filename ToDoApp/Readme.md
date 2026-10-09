@@ -160,7 +160,6 @@ The frontend calls the API at `http://localhost:5000/api/tasks`. If your backend
 ## Roadmap
 
 - Deploy the app online (MongoDB Atlas, a hosted backend and a static frontend host)
-- User accounts (login/signup) and per-user task lists — planned as a v2 feature
 
 ## Author
 
