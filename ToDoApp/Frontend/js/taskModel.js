@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api/tasks";
+const API_URL = "https://todoapp-qugc.onrender.com/api/tasks";
 
 export let taskArray = [];
 
