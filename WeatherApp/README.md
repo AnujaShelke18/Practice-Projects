@@ -2,7 +2,8 @@
 
 A responsive weather dashboard built with React. Search any city to see current conditions, sunrise and sunset times, and a 7-day forecast, all in a glassmorphism (frosted glass) interface.
 
-<!--![Weather App screenshot](./screenshot.png)-->
+![Weather App screenshot](./screenshots/screen.png)
+![Weather App screenshot](./screenshots/shot.png)
 
 **Live demo:** _add your deployed link here_
 
