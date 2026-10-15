@@ -5,7 +5,7 @@ A responsive weather dashboard built with React. Search any city to see current 
 ![Weather App screenshot](./screenshots/screen.png)
 ![Weather App screenshot](./screenshots/shot.png)
 
-**Live demo:** _add your deployed link here_
+**Live demo:** https://weatherapp-gf99.onrender.com/
 
 ## Features
 
