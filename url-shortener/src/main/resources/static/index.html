@@ -65,6 +65,11 @@
       color: #4f46e5;
       word-break: break-all;
     }
+
+    button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    }
   </style>
 </head>
 
@@ -106,23 +111,40 @@ function renderHistory() {
 
 renderHistory();
 
-    //  send a POST request to "/api/shorten" using fetch
-    //   method: "POST"
-    //   headers: { "Content-Type": "application/json" }
-    //   body: JSON.stringify({ url: input.value })
-    button.addEventListener("click", async () => {
-      const response = await fetch("/api/shorten", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: input.value })
-      });
+button.addEventListener("click", async () => {
+  button.disabled = true;
+  button.textContent = "Shortening...";
+  result.textContent = "";
 
-      // if the response is not ok (response.ok is false), show "Invalid URL" in result and return
-      if (!response.ok) {
-        result.textContent = "Invalid URL";
-        return;
-      }
+  try {
+    const response = await fetch("/api/shorten", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: input.value })
+    });
 
+    if (!response.ok) {
+      result.textContent = "Enter a full link starting with http:// or https://";
+      return;
+    }
+
+    const data = await response.json();
+
+    previousCodes.unshift({ shortCode: data.shortCode, originalUrl: data.originalUrl });
+    previousCodes = previousCodes.slice(0, 5);
+    localStorage.setItem("previousCodes", JSON.stringify(previousCodes));
+    renderHistory();
+
+    const shortUrl = window.location.origin + "/" + data.shortCode;
+    result.innerHTML = `<a href="${shortUrl}">${shortUrl}</a>`;
+  } catch (error) {
+    result.textContent = "Could not reach the server. Please try again.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "Shorten";
+  }
+});
+      
       // read the JSON with await response.json(), then show the short link in result:
       //   window.location.origin + "/" + data.shortCode
       //   (make it a clickable <a> tag by setting result.innerHTML)
@@ -140,7 +162,7 @@ renderHistory();
       
       const shortUrl = window.location.origin + "/" + data.shortCode;
       result.innerHTML = `<a href="${shortUrl}">${shortUrl}</a>`;
-    });
+    
   </script>
 </body>
 
