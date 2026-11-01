@@ -1,84 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>URL Shortener</title>
   <style>
-  body {
-    font-family: system-ui, sans-serif;
-    max-width: 520px;
-    margin: 80px auto;
-    padding: 0 16px;
-    color: #222;
-  }
-  h1 { margin-bottom: 24px; }
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 520px;
+      margin: 80px auto;
+      padding: 0 16px;
+      color: #222;
+    }
 
-  .row { display: flex; gap: 8px; }
+    h1 {
+      margin-bottom: 24px;
+    }
 
-  input {
-    flex: 1;
-    padding: 12px 14px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  input:focus { border-color: #4f46e5; }
+    .row {
+      display: flex;
+      gap: 8px;
+    }
 
-  button {
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #fff;
-    background: #4f46e5;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  button:hover { background: #4338ca; }
-  button:active { transform: scale(0.97); }
+    input {
+      flex: 1;
+      padding: 12px 14px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
 
-  #result { margin-top: 24px; font-size: 18px; }
-  #result a { color: #4f46e5; word-break: break-all; }
-</style>
+    input:focus {
+      border-color: #4f46e5;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      background: #4f46e5;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #4338ca;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    #result {
+      margin-top: 24px;
+      font-size: 18px;
+    }
+
+    #result a {
+      color: #4f46e5;
+      word-break: break-all;
+    }
+  </style>
 </head>
+
 <body>
   <h1>URL Shortener</h1>
+  <div class="row">
   <input id="urlInput" type="text" placeholder="https://example.com">
   <button id="shortenBtn">Shorten</button>
+  </div>
   <div id="result"></div>
+  <h3>Recent links</h3>
+  <ul id="previousCodes"></ul>
 
   <script>
     const input = document.getElementById("urlInput");
     const button = document.getElementById("shortenBtn");
     const result = document.getElementById("result");
 
-      //  send a POST request to "/api/shorten" using fetch
-      //   method: "POST"
-      //   headers: { "Content-Type": "application/json" }
-      //   body: JSON.stringify({ url: input.value })
+    const historyList = document.getElementById("previousCodes");
+    let previousCodes = JSON.parse(localStorage.getItem("previousCodes") || "[]");
+
+function renderHistory() {
+  historyList.innerHTML = "";
+  for (const item of previousCodes) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    // TODO: set a.href to window.location.origin + "/" + item.shortCode
+    //       and a.textContent to the same text
+    const shorturl = window.location.origin + "/" + item.shortCode;
+    a.href = shorturl;
+    a.textContent = shorturl;
+    const span = document.createElement("span");
+    // TODO: set span.textContent to " → " + item.originalUrl
+    span.textContent = " - " + item.originalUrl;
+    li.append(a, span);
+    historyList.append(li);
+  }
+}
+
+renderHistory();
+
+    //  send a POST request to "/api/shorten" using fetch
+    //   method: "POST"
+    //   headers: { "Content-Type": "application/json" }
+    //   body: JSON.stringify({ url: input.value })
     button.addEventListener("click", async () => {
       const response = await fetch("/api/shorten", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: input.value })
       });
-     
+
       // if the response is not ok (response.ok is false), show "Invalid URL" in result and return
       if (!response.ok) {
         result.textContent = "Invalid URL";
         return;
       }
-     
-    // read the JSON with await response.json(), then show the short link in result:
+
+      // read the JSON with await response.json(), then show the short link in result:
       //   window.location.origin + "/" + data.shortCode
       //   (make it a clickable <a> tag by setting result.innerHTML)
       const data = await response.json();
+
+      // TODO: add { shortCode: data.shortCode, originalUrl: data.originalUrl } to the front of history
+      //       (hint: history.unshift(...))
+      previousCodes.unshift({ shortCode: data.shortCode, originalUrl: data.originalUrl });
+      // TODO: keep only the newest 5: history = history.slice(0, 5);
+      previousCodes = previousCodes.slice(0, 5);
+      // TODO: save it: localStorage.setItem("history", JSON.stringify(history));
+      localStorage.setItem("previousCodes", JSON.stringify(previousCodes));
+      // TODO: call renderHistory();
+      renderHistory();
+      
       const shortUrl = window.location.origin + "/" + data.shortCode;
       result.innerHTML = `<a href="${shortUrl}">${shortUrl}</a>`;
     });
   </script>
 </body>
+
 </html>
