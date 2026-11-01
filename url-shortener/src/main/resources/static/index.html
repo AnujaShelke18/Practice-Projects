@@ -138,6 +138,22 @@
       return btn;
     }
 
+    // Asks the server how many clicks a saved link has and shows it next to the link
+    async function loadClicks(item, clicksSpan) {
+      try {
+        const response = await fetch("/api/stats/" + item.shortCode);
+        if (!response.ok) {
+          clicksSpan.textContent = " (not found)";
+          return;
+        }
+        const stats = await response.json();
+        clicksSpan.textContent =
+          " (" + stats.clickCount + (stats.clickCount === 1 ? " click)" : " clicks)");
+      } catch (error) {
+        // server unreachable: leave the count blank
+      }
+    }
+
     function renderHistory() {
       historyList.innerHTML = "";
       for (const item of previousCodes) {
@@ -151,8 +167,11 @@
         const span = document.createElement("span");
         span.textContent = " → " + item.originalUrl;
 
-        li.append(a, makeCopyButton(shortUrl), span);
+        const clicks = document.createElement("span");
+
+        li.append(a, makeCopyButton(shortUrl), span, clicks);
         historyList.append(li);
+        loadClicks(item, clicks);
       }
     }
 
