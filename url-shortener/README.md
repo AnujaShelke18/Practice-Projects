@@ -3,7 +3,7 @@
 A small full-stack URL shortener built with Spring Boot. Paste a long link, get a short one, and track how many times it has been clicked.
 
 <!-- Add a screenshot of the page with a short link on it: -->
-[screenshot](screenshot.png)
+screenshot -> screenshot.png
 
 ## Features
 
