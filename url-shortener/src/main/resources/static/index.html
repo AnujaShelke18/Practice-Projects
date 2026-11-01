@@ -56,6 +56,23 @@
       transform: scale(0.97);
     }
 
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .copy-btn {
+      padding: 4px 10px;
+      font-size: 14px;
+      margin-left: 6px;
+      color: #4f46e5;
+      background: #e0e7ff;
+    }
+
+    .copy-btn:hover {
+      background: #c7d2fe;
+    }
+
     #result {
       margin-top: 24px;
       font-size: 18px;
@@ -66,9 +83,13 @@
       word-break: break-all;
     }
 
-    button:disabled {
-    opacity: 0.6;
-    cursor: wait;
+    #previousCodes {
+      padding-left: 20px;
+    }
+
+    #previousCodes li {
+      margin-bottom: 8px;
+      word-break: break-all;
     }
   </style>
 </head>
@@ -76,8 +97,8 @@
 <body>
   <h1>URL Shortener</h1>
   <div class="row">
-  <input id="urlInput" type="text" placeholder="https://example.com">
-  <button id="shortenBtn">Shorten</button>
+    <input id="urlInput" type="text" placeholder="https://example.com">
+    <button id="shortenBtn">Shorten</button>
   </div>
   <div id="result"></div>
   <h3>Recent links</h3>
@@ -87,82 +108,96 @@
     const input = document.getElementById("urlInput");
     const button = document.getElementById("shortenBtn");
     const result = document.getElementById("result");
-
     const historyList = document.getElementById("previousCodes");
+
     let previousCodes = JSON.parse(localStorage.getItem("previousCodes") || "[]");
 
-function renderHistory() {
-  historyList.innerHTML = "";
-  for (const item of previousCodes) {
-    const li = document.createElement("li");
-    const a = document.createElement("a");
-    // TODO: set a.href to window.location.origin + "/" + item.shortCode
-    //       and a.textContent to the same text
-    const shorturl = window.location.origin + "/" + item.shortCode;
-    a.href = shorturl;
-    a.textContent = shorturl;
-    const span = document.createElement("span");
-    // TODO: set span.textContent to " → " + item.originalUrl
-    span.textContent = " - " + item.originalUrl;
-    li.append(a, span);
-    historyList.append(li);
-  }
-}
-
-renderHistory();
-
-button.addEventListener("click", async () => {
-  button.disabled = true;
-  button.textContent = "Shortening...";
-  result.textContent = "";
-
-  try {
-    const response = await fetch("/api/shorten", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: input.value })
-    });
-
-    if (!response.ok) {
-      result.textContent = "Enter a full link starting with http:// or https://";
-      return;
+    // Copies text to the clipboard and briefly changes the button label
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          btn.textContent = "Copied!";
+        })
+        .catch(() => {
+          btn.textContent = "Copy failed";
+        })
+        .finally(() => {
+          setTimeout(() => {
+            btn.textContent = "Copy";
+          }, 1500);
+        });
     }
 
-    const data = await response.json();
+    // Builds a small "Copy" button for a given short link
+    function makeCopyButton(text) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "copy-btn";
+      btn.textContent = "Copy";
+      btn.addEventListener("click", () => copyText(text, btn));
+      return btn;
+    }
 
-    previousCodes.unshift({ shortCode: data.shortCode, originalUrl: data.originalUrl });
-    previousCodes = previousCodes.slice(0, 5);
-    localStorage.setItem("previousCodes", JSON.stringify(previousCodes));
+    function renderHistory() {
+      historyList.innerHTML = "";
+      for (const item of previousCodes) {
+        const li = document.createElement("li");
+
+        const a = document.createElement("a");
+        const shortUrl = window.location.origin + "/" + item.shortCode;
+        a.href = shortUrl;
+        a.textContent = shortUrl;
+
+        const span = document.createElement("span");
+        span.textContent = " → " + item.originalUrl;
+
+        li.append(a, makeCopyButton(shortUrl), span);
+        historyList.append(li);
+      }
+    }
+
     renderHistory();
 
-    const shortUrl = window.location.origin + "/" + data.shortCode;
-    result.innerHTML = `<a href="${shortUrl}">${shortUrl}</a>`;
-  } catch (error) {
-    result.textContent = "Could not reach the server. Please try again.";
-  } finally {
-    button.disabled = false;
-    button.textContent = "Shorten";
-  }
-});
-      
-      // read the JSON with await response.json(), then show the short link in result:
-      //   window.location.origin + "/" + data.shortCode
-      //   (make it a clickable <a> tag by setting result.innerHTML)
-      const data = await response.json();
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      button.textContent = "Shortening...";
+      result.textContent = "";
 
-      // TODO: add { shortCode: data.shortCode, originalUrl: data.originalUrl } to the front of history
-      //       (hint: history.unshift(...))
-      previousCodes.unshift({ shortCode: data.shortCode, originalUrl: data.originalUrl });
-      // TODO: keep only the newest 5: history = history.slice(0, 5);
-      previousCodes = previousCodes.slice(0, 5);
-      // TODO: save it: localStorage.setItem("history", JSON.stringify(history));
-      localStorage.setItem("previousCodes", JSON.stringify(previousCodes));
-      // TODO: call renderHistory();
-      renderHistory();
-      
-      const shortUrl = window.location.origin + "/" + data.shortCode;
-      result.innerHTML = `<a href="${shortUrl}">${shortUrl}</a>`;
-    
+      try {
+        const response = await fetch("/api/shorten", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: input.value.trim() })
+        });
+
+        if (response.status === 400) {
+          result.textContent = "Enter a full link starting with http:// or https://";
+          return;
+        }
+        if (!response.ok) {
+          result.textContent = "Server error (" + response.status + "). Please try again.";
+          return;
+        }
+
+        const data = await response.json();
+
+        previousCodes.unshift({ shortCode: data.shortCode, originalUrl: data.originalUrl });
+        previousCodes = previousCodes.slice(0, 5);
+        localStorage.setItem("previousCodes", JSON.stringify(previousCodes));
+        renderHistory();
+
+        const shortUrl = window.location.origin + "/" + data.shortCode;
+        const link = document.createElement("a");
+        link.href = shortUrl;
+        link.textContent = shortUrl;
+        result.append(link, makeCopyButton(shortUrl));
+      } catch (error) {
+        result.textContent = "Could not reach the server. Please try again.";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Shorten";
+      }
+    });
   </script>
 </body>
 
